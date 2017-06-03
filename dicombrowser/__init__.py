@@ -44,10 +44,10 @@ def read_dicom_file(fname, tag_filter=None):
     for tag in df:
         if tag_filter is not None:
             if tag.name in tag_filter:
-                tags[tag.name] = df[tag.tag].value
+                tags[tag.name] = str(df[tag.tag].value)
 
         else:
             if tag.name not in disabled_tags:
-                tags[tag.name] = df[tag.tag].value
+                tags[tag.name] = str(df[tag.tag].value)
 
     return tags

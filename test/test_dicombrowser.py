@@ -80,5 +80,15 @@ class TestBrowser(unittest.TestCase):
 
             self.assertSetEqual(available_tag_names, expected_tag_names)
 
+    def test_all_values_are_strings(self):
+        for directory, expected_result in self.get_next_test_directory():
+            tree = db.browse(directory)
+            for fname, tags in tree.items():
+                self.assertIsInstance(fname, str)
+                for tagname, tagvalue in tags.items():
+                    self.assertIsInstance(tagname, str)
+                    self.assertIsInstance(tagvalue, str)
+
+
 
 

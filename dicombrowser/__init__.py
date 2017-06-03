@@ -7,6 +7,8 @@ def browse(directory):
     """
     Browses a directory and returns list of DICOM files and the values of their tags as a dictionary.
 
+    The dictionary uses same tag names as those used by pydicom library (mind the spacing and capital/lower case).
+
     :param directory: directory pth where to search for DICOM files.
     :return: dictionary with DICOM tag values for each DICOM file in directory
     """
@@ -55,6 +57,7 @@ def read_dicom_file(fname):
     tags = {}
     df = dicom.read_file(fname)
     for tag in df:
-        tags[tag.name] = df[tag.tag].value
+        if tag.name != 'Pixel Data':
+            tags[tag.name] = df[tag.tag].value
 
     return tags

@@ -17,10 +17,18 @@ class TestBrowser(unittest.TestCase):
         curdir = os.path.dirname(os.path.abspath(__file__))
         expected_results = {os.path.join(curdir, 'testdirectory/slice'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 1,
-                                 'First Filename': 'Anonymized20170603.dcm'},
+                                 'Test Filename': 'Anonymized20170603.dcm',
+                                 'Spacing Between Slices': 0.5,
+                                 'Window Width': ['00350', '00350'],
+                                 'Series Instance UID': '1.2.826.0.1.3680043.8.1055.1.20111102150758591.96842950.07877442',
+                                 'Patient\'s Age': '000Y'},
                             os.path.join(curdir, 'testdirectory/series'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 11,
-                                 'First Filename': 'image-000000.dcm'}
+                                 'Test Filename': 'image-000000.dcm',
+                                 'Spacing Between Slices': 4.5,
+                                 'Window Width': '4005',
+                                 'Series Instance UID': '1.2.826.0.1.3680043.8.1055.1.20111103111204584.92619625.78204558',
+                                 'Patient\'s Age': '000Y'},
                             }
         for subdir, expected_result in expected_results.items():
             yield subdir, expected_result
@@ -37,24 +45,28 @@ class TestBrowser(unittest.TestCase):
             self.assertIsNotNone(tree)
             self.assertEqual(len(tree), expected_result['Number Of Files'])
 
-    def test_first_file_patientsname(self):
+    def test_correct_patientsname(self):
         for directory, expected_result in self.get_next_test_directory():
             tree = db.browse(directory)
 
-            first_filename = os.path.join(directory, expected_result['First Filename'])
-            self.assertEqual(tree[first_filename]['Patient\'s Name'], expected_result['Patient\'s Name'])
+            test_filename = os.path.join(directory, expected_result['Test Filename'])
+            self.assertEqual(tree[test_filename]['Patient\'s Name'], expected_result['Patient\'s Name'])
 
     def test_keeps_alphabetic_sorting(self):
-
-        for directory, expeced_result in self.get_next_test_directory():
+        for directory, expected_result in self.get_next_test_directory():
             tree = db.browse(directory)
 
             self.assertListEqual(sorted(tree.keys()), list(tree.keys()))
 
     def test_reads_tag_values_correctly(self):
-        pass
+        for directory, expected_result in self.get_next_test_directory():
+            tree = db.browse(directory)
 
+            test_filename = os.path.join(directory, expected_result['Test Filename'])
+            for tag_name in ('Spacing Between Slices', 'Window Width', 'Patient\'s Age', 'Series Instance UID'):
+                self.assertEqual(str(tree[test_filename][tag_name]), str(expected_result[tag_name]),
+                                 msg="%s tag value incorrect" % tag_name)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(warnings='ignore')

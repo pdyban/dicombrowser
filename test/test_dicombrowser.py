@@ -14,7 +14,7 @@ class TestBrowser(unittest.TestCase):
         pass
 
     def get_next_test_directory(self):
-        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../dicombrowser/testdirectory/')
+        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testdirectory/')
         expected_results = {os.path.join(curdir, 'slice'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 1,
                                  'Test Filename': 'Anonymized20170603.dcm',
@@ -89,6 +89,12 @@ class TestBrowser(unittest.TestCase):
                     self.assertIsInstance(tagname, str)
                     self.assertIsInstance(tagvalue, str)
 
+    def test_gently_throws_exception_if_tag_name_is_not_valid(self):
+        for directory, expected_result in self.get_next_test_directory():
+            with self.assertRaises(AttributeError):
+                tree = db.browse(directory, select_tags=['SeriesTime'])  # space omitted on purpose
 
-
-
+    def test_gently_throws_expection_if_directory_is_not_valid(self):
+        for directory, expected_result in self.get_next_test_directory():
+            with self.assertRaises(AttributeError):
+                tree = db.browse('')  # directory is invalid on purpose

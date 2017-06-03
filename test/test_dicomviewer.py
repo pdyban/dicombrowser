@@ -24,7 +24,7 @@ def captured_output():
 
 class ITestCase(unittest.TestCase):
     def get_next_test_directory(self):
-        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../dicombrowser/testdirectory/')
+        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testdirectory/')
         expected_results = {os.path.join(curdir, 'slice'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 1,
                                  'Test Filename': 'Anonymized20170603.dcm',

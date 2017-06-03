@@ -14,6 +14,9 @@ def browse(directory, select_tags=None):
     :return: dictionary with DICOM tag values for each DICOM file in directory
     """
     tree = OrderedDict()
+    if not os.path.exists(directory):
+        raise AttributeError("Directory does not exist.")
+
     for fname in os.listdir(directory):
         full_fname = os.path.join(directory, fname)
         try:
@@ -39,6 +42,14 @@ def read_dicom_file(fname, tag_filter=None):
     """
     tags = {}
     disabled_tags = ['Pixel Data']  # disable for speed improvement and debugging, TODO: enable in final release
+
+    # check if the DICOM tag names are supported by pydicom
+    supported_dicom_tag_names = [item[2] for item in dicom._dicom_dict.DicomDictionary.values()]
+    if tag_filter is not None:
+        for tag_name in tag_filter:
+            if tag_name not in supported_dicom_tag_names:
+                raise AttributeError("%s is not a valid DICOM tag name. " \
+                                     "Please consult pydicom dictionary for a list of valid names." % tag_name)
 
     df = dicom.read_file(fname)
     for tag in df:

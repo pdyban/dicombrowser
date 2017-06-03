@@ -1,6 +1,7 @@
 import unittest
 from dicomviewer import ConsoleViewer
 from dicomviewer import FileViewer
+from dicomviewer import CSVViewer
 import os
 from contextlib import contextmanager
 from io import StringIO
@@ -78,6 +79,25 @@ class TestFileViewer(ITestCase):
 
             os.remove(tempfilename)
 
+
+class TestCSVViewer(ITestCase):
+    def test_can_write_to_csv(self):
+        for directory, expected_result in self.get_next_test_directory():
+            tags = ['Patient\'s Name', 'Patient\'s Age']
+
+            tempfilename = 'test_csvviewer.log'
+            with open(tempfilename, 'w') as tf:
+                viewer = CSVViewer(tf, directory, tags)
+                viewer.draw()
+
+            with open(tempfilename, 'r') as tf:
+                contents = tf.read()
+                self.assertIn('Patient\'s Name', contents)
+                self.assertIn('Patient\'s Age', contents)
+                self.assertNotIn('Referring Physician\'s Name', contents)
+                self.assertNotIn('Series Instance UID', contents)
+
+            os.remove(tempfilename)
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

@@ -21,14 +21,16 @@ class TestBrowser(unittest.TestCase):
                                  'Spacing Between Slices': 0.5,
                                  'Window Width': ['00350', '00350'],
                                  'Series Instance UID': '1.2.826.0.1.3680043.8.1055.1.20111102150758591.96842950.07877442',
-                                 'Patient\'s Age': '000Y'},
+                                 'Patient\'s Age': '000Y',
+                                 'Filter By Tags': ['Patient\'s Name', 'Patient\'s Age', 'Spacing Between Slices']},
                             os.path.join(curdir, 'testdirectory/series'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 11,
                                  'Test Filename': 'image-000000.dcm',
                                  'Spacing Between Slices': 4.5,
                                  'Window Width': '4005',
                                  'Series Instance UID': '1.2.826.0.1.3680043.8.1055.1.20111103111204584.92619625.78204558',
-                                 'Patient\'s Age': '000Y'},
+                                 'Patient\'s Age': '000Y',
+                                 'Filter By Tags': ['Patient\'s Name', 'Patient\'s Age']},
                             }
         for subdir, expected_result in expected_results.items():
             yield subdir, expected_result
@@ -66,6 +68,18 @@ class TestBrowser(unittest.TestCase):
             for tag_name in ('Spacing Between Slices', 'Window Width', 'Patient\'s Age', 'Series Instance UID'):
                 self.assertEqual(str(tree[test_filename][tag_name]), str(expected_result[tag_name]),
                                  msg="%s tag value incorrect" % tag_name)
+
+    def test_can_filter_by_taglist(self):
+        for directory, expected_result in self.get_next_test_directory():
+            selected_tags = expected_result['Filter By Tags']
+            tree = db.browse(directory, select_tags=selected_tags)
+            test_filename = os.path.join(directory, expected_result['Test Filename'])
+
+            available_tag_names = set(tree[test_filename].keys())
+            expected_tag_names = set(selected_tags)
+
+            self.assertSetEqual(available_tag_names, expected_tag_names)
+
 
 
 if __name__ == "__main__":

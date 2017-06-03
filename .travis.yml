@@ -1,14 +1,9 @@
 language: python
 python:
   - "3.5"
-virtualenv:
-  system_site_packages: true
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
-  - pip install -U pip
-  - pip install codecov
 install:
+  - pip install .
+  - pip install codecov
   - pip install -r requirements.txt
 script: "ls -la && python dicombrowser/test.py"
 after_success:

@@ -14,7 +14,7 @@ class TestBrowser(unittest.TestCase):
         pass
 
     def get_next_test_directory(self):
-        curdir = os.path.dirname(os.path.abspath(__file__))
+        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dicombrowser')
         expected_results = {os.path.join(curdir, 'testdirectory/slice'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 1,
                                  'Test Filename': 'Anonymized20170603.dcm',

@@ -20,12 +20,42 @@ class TestBrowser(unittest.TestCase):
         self.assertIsInstance(tree, dict)
 
     def test_can_find_all_dicom_files_in_directory(self):
-        directories = {"testdirectory/slice": 1, "testdirectory/series": 361}
-        for directory in directories:
+        dicoms_count = {"testdirectory/slice": 1, "testdirectory/series": 11}
+        for directory in dicoms_count:
             testdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), directory)
             tree = db.browse(testdir)
             self.assertIsNotNone(tree)
-            self.assertEqual(len(tree), directories[directory])
+            self.assertEqual(len(tree), dicoms_count[directory])
+
+    def test_stores_filename_as_dict_key(self):
+        fnames = {"testdirectory/slice": 'Anonymized20170603.dcm', "testdirectory/series": 'image-000000.dcm'}
+        for directory in fnames:
+            testdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), directory)
+            tree = db.browse(testdir)
+
+            first_filename = os.path.join(testdir, fnames[directory])
+
+            tree[first_filename]
+
+    @unittest.skip
+    def test_first_file_patientsname(self):
+        fnames = {"testdirectory/slice": ('Anonymized20170603.dcm', 'Anonymized'),
+                  "testdirectory/series": ('image-000000.dcm', 'Anonymized')}
+        for directory in fnames:
+            testdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), directory)
+            tree = db.browse(testdir)
+
+            first_filename = os.path.join(testdir, fnames[directory][0])
+
+            self.assertEqual(tree[first_filename]['Patient\'s Name'], fnames[directory][1])
+
+    def test_keeps_alphabetic_sorting(self):
+        subdirs = ("testdirectory/slice", "testdirectory/series")
+        for directory in subdirs:
+            testdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), directory)
+            tree = db.browse(testdir)
+
+            self.assertListEqual(sorted(tree.keys()), list(tree.keys()))
 
 
 if __name__ == "__main__":

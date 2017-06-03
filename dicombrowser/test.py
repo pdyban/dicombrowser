@@ -27,17 +27,6 @@ class TestBrowser(unittest.TestCase):
             self.assertIsNotNone(tree)
             self.assertEqual(len(tree), dicoms_count[directory])
 
-    def test_stores_filename_as_dict_key(self):
-        fnames = {"testdirectory/slice": 'Anonymized20170603.dcm', "testdirectory/series": 'image-000000.dcm'}
-        for directory in fnames:
-            testdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), directory)
-            tree = db.browse(testdir)
-
-            first_filename = os.path.join(testdir, fnames[directory])
-
-            tree[first_filename]
-
-    @unittest.skip
     def test_first_file_patientsname(self):
         fnames = {"testdirectory/slice": ('Anonymized20170603.dcm', 'Anonymized'),
                   "testdirectory/series": ('image-000000.dcm', 'Anonymized')}

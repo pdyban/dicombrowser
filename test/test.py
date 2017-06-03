@@ -14,8 +14,8 @@ class TestBrowser(unittest.TestCase):
         pass
 
     def get_next_test_directory(self):
-        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dicombrowser')
-        expected_results = {os.path.join(curdir, 'testdirectory/slice'):
+        curdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../dicombrowser/testdirectory/')
+        expected_results = {os.path.join(curdir, 'slice'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 1,
                                  'Test Filename': 'Anonymized20170603.dcm',
                                  'Spacing Between Slices': 0.5,
@@ -23,7 +23,7 @@ class TestBrowser(unittest.TestCase):
                                  'Series Instance UID': '1.2.826.0.1.3680043.8.1055.1.20111102150758591.96842950.07877442',
                                  'Patient\'s Age': '000Y',
                                  'Filter By Tags': ['Patient\'s Name', 'Patient\'s Age', 'Spacing Between Slices']},
-                            os.path.join(curdir, 'testdirectory/series'):
+                            os.path.join(curdir, 'series'):
                                 {'Patient\'s Name': 'Anonymized', 'Number Of Files': 11,
                                  'Test Filename': 'image-000000.dcm',
                                  'Spacing Between Slices': 4.5,
@@ -82,5 +82,3 @@ class TestBrowser(unittest.TestCase):
 
 
 
-if __name__ == "__main__":
-    unittest.main(warnings='ignore')

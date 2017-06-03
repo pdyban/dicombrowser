@@ -1,0 +1,14 @@
+appnope==0.1.0
+backports.shutil-get-terminal-size==1.0.0
+decorator==4.0.9
+dicom==0.9.9.post1
+gnureadline==6.3.3
+ipython==4.2.0
+ipython-genutils==0.1.0
+overpy==0.3.1
+pexpect==4.1.0
+pickleshare==0.7.2
+ptyprocess==0.5.1
+pydicom==0.9.9
+simplegeneric==0.8.1
+traitlets==4.2.1

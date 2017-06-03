@@ -4,6 +4,6 @@ python:
 install:
   - pip install codecov
   - pip install -r requirements.txt
-script: "ls -la && python ./test.py"
+script: "ls -la && python ./test"
 after_success:
   - codecov

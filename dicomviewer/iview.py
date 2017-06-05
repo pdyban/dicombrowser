@@ -1,4 +1,3 @@
-import dicombrowser
 
 
 class IView(object):
@@ -9,7 +8,6 @@ class IView(object):
     def update(self):
         """
         Main function of the view component in MVVM pattern, draws the contents of the model to the output device.
-        :return:
         """
         raise NotImplementedError()
 
@@ -29,3 +27,9 @@ class IViewModel(object):
         self.view = view
         self.view.viewmodel = self
         # self.view.update()
+
+    def build(self):
+        """
+        Converts the model to a data structure that can be rendered by the view.
+        """
+        raise NotImplementedError()

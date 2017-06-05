@@ -36,9 +36,6 @@ class StreamViewModel(IViewModel):
         self.build()
 
     def build(self):
-        """
-        Converts the model to a data structure that can be rendered by the view.
-        """
         self.items = []
 
         # header line

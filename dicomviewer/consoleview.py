@@ -13,8 +13,6 @@ class ConsoleView(StreamView):
 class ConsoleViewModel(StreamViewModel):
     """
     Connects the model and view together.
-
-    Updates the view if connection successful.
     """
     def __init__(self, model, view):
         super(ConsoleViewModel, self).__init__(model, view)

@@ -3,7 +3,7 @@ import os
 package_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 if package_path not in sys.path:
     sys.path.append(package_path)
-from dicomviewer import CSVViewer
+from dicomviewer import CSVView, CSVViewModel, Model
 import argparse
 
 
@@ -20,8 +20,11 @@ def run_standalone():
 
     try:
         with open(args.out, 'w') as f:
-            viewer = CSVViewer(f, args.directory, args.tags)
-            viewer.draw_model()
+            # MVVM pattern
+            model = Model(args.directory, args.tags)  # contains the model
+            view = CSVView(f)  # pointer to the visual widget (command line)
+            viewmodel = CSVViewModel(model, view)  # updates the view with the model's contents
+            view.update()
 
     except AttributeError as e:
         sys.stderr.write(str(e))

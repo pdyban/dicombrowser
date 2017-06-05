@@ -4,7 +4,7 @@ package_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardi
 if package_path not in sys.path:
     sys.path.append(package_path)
 
-from dicomviewer import ConsoleViewer
+from dicomviewer import ConsoleView, ConsoleViewModel, Model
 import argparse
 
 
@@ -19,8 +19,12 @@ def run_standalone():
     args = parser.parse_args()
 
     try:
-        viewer = ConsoleViewer(args.directory, args.tags)
-        viewer.draw_model()
+        # MVVM pattern
+        model = Model(args.directory, args.tags)  # contains the model
+        view = ConsoleView()  # pointer to the visual widget (command line)
+        viewmodel = ConsoleViewModel(model, view)  # updates the view with the model's contents
+        view.update()
+
     except AttributeError as e:
         sys.stderr.write(str(e))
 

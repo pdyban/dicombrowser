@@ -4,6 +4,9 @@ python:
 install:
   - pip install codecov
   - pip install -r requirements.txt
-script: "ls -la && python -m unittest discover"
+script:
+  - "ls -la && python -m unittest discover"
+  - python /Users/missoni/GitHub/dicombrowser/scripts/dicombrowser_csv.py out.csv ./test/testdirectory/series "Patient's Name" "Patient's Age" "Series Time"
+  - python /Users/missoni/GitHub/dicombrowser/scripts/dicombrowser_cmd.py ./test/testdirectory/series "Patient's Name" "Patient's Age" "Series Time"
 after_success:
   - codecov

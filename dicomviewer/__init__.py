@@ -1,7 +1,8 @@
-from .consoleviewer import ConsoleViewer
-from .streamviewer import StreamView
-from .fileviewer import FileViewer
-from .csvviewer import CSVViewer
+from .consoleview import ConsoleView, ConsoleViewModel
+from .streamview import StreamView, StreamViewModel
+from .fileview import FileView, FileViewModel
+from .csvview import CSVView, CSVViewModel
+from .model import Model
 
 
 if __name__ == '__main__':

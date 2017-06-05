@@ -1,7 +1,8 @@
 import unittest
-from dicomviewer import ConsoleViewer
-from dicomviewer import FileViewer
-from dicomviewer import CSVViewer
+from dicomviewer import Model
+from dicomviewer import ConsoleViewModel, ConsoleView
+from dicomviewer import FileViewModel, FileView
+from dicomviewer import CSVView, CSVViewModel
 import os
 from contextlib import contextmanager
 from io import StringIO
@@ -49,15 +50,21 @@ class ITestCase(unittest.TestCase):
 class TestConsoleViewer(ITestCase):
     def test_can_display_results(self):
         for directory, expected_result in self.get_next_test_directory():
-            tags = ['Patient\'s Name', 'Patient\'s Age']
+            tags = ['Patient\'s Name', 'Patient\'s Age', 'Spacing Between Slices']
 
             with captured_output() as (out, err):
-                viewer = ConsoleViewer(directory, tags)
-                viewer.draw_model()
-                self.assertIn('Patient\'s Name', out.getvalue())
-                self.assertIn('Patient\'s Age', out.getvalue())
-                self.assertNotIn('Referring Physician\'s Name', out.getvalue())
-                self.assertNotIn('Series Instance UID', out.getvalue())
+                # MVVM pattern
+                model = Model(directory, tags)  # contains the model
+                view = ConsoleView()  # pointer to the visual widget (command line)
+                viewmodel = ConsoleViewModel(model, view)  # updates the view with the model's contents
+                view.update()
+
+                contents = out.getvalue()
+                self.assertNotIn('Referring Physician\'s Name', contents)
+                self.assertNotIn('Series Instance UID', contents)
+                for tag in tags:
+                    self.assertIn(tag, contents)
+                    self.assertIn(str(expected_result[tag]), contents)
 
 
 class TestFileViewer(ITestCase):
@@ -67,15 +74,19 @@ class TestFileViewer(ITestCase):
 
             tempfilename = 'test_fileviewer.log'
             with open(tempfilename, 'w') as tf:
-                viewer = FileViewer(tf, directory, tags)
-                viewer.draw_model()
+                # MVVM pattern
+                model = Model(directory, tags)  # contains the model
+                view = FileView(tf)  # pointer to the visual widget (command line)
+                viewmodel = FileViewModel(model, view)  # updates the view with the model's contents
+                view.update()
 
             with open(tempfilename, 'r') as tf:
                 contents = tf.read()
-                self.assertIn('Patient\'s Name', contents)
-                self.assertIn('Patient\'s Age', contents)
                 self.assertNotIn('Referring Physician\'s Name', contents)
                 self.assertNotIn('Series Instance UID', contents)
+                for tag in tags:
+                    self.assertIn(tag, contents)
+                    self.assertIn(str(expected_result[tag]), contents)
 
             os.remove(tempfilename)
 
@@ -87,17 +98,22 @@ class TestCSVViewer(ITestCase):
 
             tempfilename = 'test_csvviewer.log'
             with open(tempfilename, 'w') as tf:
-                viewer = CSVViewer(tf, directory, tags)
-                viewer.draw_model()
+                # MVVM pattern
+                model = Model(directory, tags)  # contains the model
+                view = CSVView(tf)  # pointer to the visual widget (command line)
+                viewmodel = CSVViewModel(model, view)  # updates the view with the model's contents
+                view.update()
 
             with open(tempfilename, 'r') as tf:
                 contents = tf.read()
-                self.assertIn('Patient\'s Name', contents)
-                self.assertIn('Patient\'s Age', contents)
                 self.assertNotIn('Referring Physician\'s Name', contents)
                 self.assertNotIn('Series Instance UID', contents)
+                for tag in tags:
+                    self.assertIn(tag, contents)
+                    self.assertIn(str(expected_result[tag]), contents)
 
             os.remove(tempfilename)
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

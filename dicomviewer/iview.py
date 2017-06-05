@@ -2,31 +2,13 @@ import dicombrowser
 
 
 class IView(object):
-    def __init__(self, directory, select_tags):
+    def __init__(self):
         super(IView, self).__init__()
-        self.directory = directory
-        self.select_tags = select_tags
-        self.model = None
-        if select_tags is None or len(select_tags) < 1:
-            raise AttributeError("Please specify at least one DICOM tag.")
+        self.viewmodel = None
 
-    def build_model(self):
+    def update(self):
         """
-        Builds the model component in MVVM pattern.
-
-        Launches DicomBrowser and builds the domain model representation.
-        """
-        self.model = dicombrowser.browse(self.directory, select_tags=self.select_tags)
-
-    def build_viewmodel(self):
-        """
-        Builds the viewmodel component in MVVM pattern.
-        """
-        raise NotImplementedError()
-
-    def draw_model(self):
-        """
-        Main function of the viewer, draws the contents of the model.
+        Main function of the view component in MVVM pattern, draws the contents of the model to the output device.
         :return:
         """
         raise NotImplementedError()
@@ -36,5 +18,14 @@ class IViewModel(object):
     """
     The ViewModel component in MVVM pattern.
     """
-    def __init__(self):
+    def __init__(self, model, view):
         super(IViewModel, self).__init__()
+
+        # connect to model
+        self.model = model
+        self.model.viewmodels.append(self)
+
+        # connect to view and update
+        self.view = view
+        self.view.viewmodel = self
+        # self.view.update()

@@ -32,9 +32,6 @@ class StreamViewModel(IViewModel):
     def __init__(self, model, view):
         super(StreamViewModel, self).__init__(model, view)
 
-        self.items = None
-        self.build()
-
     def build(self):
         self.items = []
 

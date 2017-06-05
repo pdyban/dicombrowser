@@ -23,6 +23,9 @@ class IViewModel(object):
         self.model = model
         self.model.viewmodels.append(self)
 
+        self.items = None
+        self.build()
+
         # connect to view and update
         self.view = view
         self.view.viewmodel = self

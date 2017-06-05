@@ -3,6 +3,7 @@ from dicomviewer import Model
 from dicomviewer import ConsoleViewModel, ConsoleView
 from dicomviewer import FileViewModel, FileView
 from dicomviewer import CSVView, CSVViewModel
+from dicomviewer import WebView, WebViewModel
 import os
 from contextlib import contextmanager
 from io import StringIO
@@ -113,6 +114,18 @@ class TestCSVViewer(ITestCase):
                     self.assertIn(str(expected_result[tag]), contents)
 
             os.remove(tempfilename)
+
+
+class TestWebViewer(ITestCase):
+    def test_can_connect_client_to_server(self):
+
+        for directory, expected_result in self.get_next_test_directory():
+            tags = ['Patient\'s Name', 'Patient\'s Age']
+
+            model = Model(directory, tags)  # contains the model
+            view = WebView()  # pointer to the visual widget (command line)
+            viewmodel = WebViewModel(model, view)  # updates the view with the model's contents
+            view.update()
 
 
 if __name__ == '__main__':

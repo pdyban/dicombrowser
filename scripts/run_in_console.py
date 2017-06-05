@@ -20,7 +20,7 @@ def run_standalone():
 
     try:
         viewer = ConsoleViewer(args.directory, args.tags)
-        viewer.draw()
+        viewer.draw_model()
     except AttributeError as e:
         sys.stderr.write(str(e))
 

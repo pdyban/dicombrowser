@@ -1,28 +1,30 @@
-from .iviewer import IViewer
+from .iview import IView
+from .model import Model
 import sys
 
 
-class StreamViewer(IViewer):
+class StreamView(IView):
     def __init__(self, directory, select_tags, stream=sys.stdout):
-        super(StreamViewer, self).__init__(directory=directory, select_tags=select_tags)
+        super(StreamView, self).__init__(directory=directory, select_tags=select_tags)
         self.stream = stream
         self.separator = '\t'
 
-    def parse(self):
-        lines = []
+    def build_viewmodel(self):
+        lines = Model()
         # header line
         line = ['Filename'] + [tag for tag in self.select_tags]
         lines.append(line)
 
         # for each file
-        for fname in self.browser:
-            line = [fname] + [self.browser[fname][tag] for tag in self.select_tags]
+        for fname in self.model:
+            line = [fname] + [self.model[fname][tag] for tag in self.select_tags]
             lines.append(line)
 
         return lines
 
-    def draw(self):
-        lines = self.parse()
+    def draw_model(self):
+        self.build_model()
+        lines = self.build_viewmodel()
 
         col_width = []
         for column in range(len(lines[0])):

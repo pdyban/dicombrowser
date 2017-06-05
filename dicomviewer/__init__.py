@@ -1,5 +1,5 @@
 from .consoleviewer import ConsoleViewer
-from .streamviewer import StreamViewer
+from .streamviewer import StreamView
 from .fileviewer import FileViewer
 from .csvviewer import CSVViewer
 

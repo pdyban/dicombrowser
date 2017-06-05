@@ -53,7 +53,7 @@ class TestConsoleViewer(ITestCase):
 
             with captured_output() as (out, err):
                 viewer = ConsoleViewer(directory, tags)
-                viewer.draw()
+                viewer.draw_model()
                 self.assertIn('Patient\'s Name', out.getvalue())
                 self.assertIn('Patient\'s Age', out.getvalue())
                 self.assertNotIn('Referring Physician\'s Name', out.getvalue())
@@ -68,7 +68,7 @@ class TestFileViewer(ITestCase):
             tempfilename = 'test_fileviewer.log'
             with open(tempfilename, 'w') as tf:
                 viewer = FileViewer(tf, directory, tags)
-                viewer.draw()
+                viewer.draw_model()
 
             with open(tempfilename, 'r') as tf:
                 contents = tf.read()
@@ -88,7 +88,7 @@ class TestCSVViewer(ITestCase):
             tempfilename = 'test_csvviewer.log'
             with open(tempfilename, 'w') as tf:
                 viewer = CSVViewer(tf, directory, tags)
-                viewer.draw()
+                viewer.draw_model()
 
             with open(tempfilename, 'r') as tf:
                 contents = tf.read()

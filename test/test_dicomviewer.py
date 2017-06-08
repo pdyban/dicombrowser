@@ -8,6 +8,8 @@ import os
 from contextlib import contextmanager
 from io import StringIO
 import sys
+import asyncio
+import websockets
 
 
 @contextmanager
@@ -118,14 +120,21 @@ class TestCSVViewer(ITestCase):
 
 class TestWebViewer(ITestCase):
     def test_can_connect_client_to_server(self):
+        """
+        @TODO: check with selenium if the output HTML structure is correct.
+        """
+        tags = ['Patient\'s Name', 'Patient\'s Age']
 
-        for directory, expected_result in self.get_next_test_directory():
-            tags = ['Patient\'s Name', 'Patient\'s Age']
+        address = 'localhost'
+        port = '1234'
+        model = Model('', tags)  # model is empty at the beginning, user will init it from browser
+        view = WebView(address, port)  # pointer to the visual widget (command line)
+        viewmodel = WebViewModel(model, view)  # updates the view with the model's contents
 
-            model = Model(directory, tags)  # contains the model
-            view = WebView()  # pointer to the visual widget (command line)
-            viewmodel = WebViewModel(model, view)  # updates the view with the model's contents
-            view.update()
+        viewmodel.start_server()  # start server
+        view.update()  # open browser window
+
+        viewmodel.run_forever()  # keep server running
 
 
 if __name__ == '__main__':

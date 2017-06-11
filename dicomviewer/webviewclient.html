@@ -2,14 +2,30 @@
 <html>
     <head>
         <title>DICOM Browser</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+        <!-- Bootstrap theme -->
+        <link href="bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
+
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <!--<link href="bootstrap/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
     </head>
     <body>
-    <H1>Dicom Browser</H1>
-    <input type="text" name="browserpath" id="browserpath"/>
-    <input type="button" value="Update" onclick="ws.send(document.getElementById('browserpath').value);"/>
+    <div class="page-header">
+        <H1>Dicom Browser</H1>
+    </div>
+
+    <div class="row">
+        ::before
+        <input type="text" name="browserpath" id="browserpath"/>
+        <input type="button" value="Update" onclick="ws.send(document.getElementById('browserpath').value);"/>
+        ::after
+    </div>
+
     <!--<input type="button" value="Series" onclick="ws.send('/Users/missoni/GitHub/dicombrowser/test/testdirectory/series/');"/>
     <input type="button" value="Slices" onclick="ws.send('/Users/missoni/GitHub/dicombrowser/test/testdirectory/slice/');"/>-->
-        <script>
+    <script>
         var ws = new WebSocket("ws://localhost:1234/");
 
         var _table_ = document.createElement('table'),
@@ -65,40 +81,51 @@
          }
 
 
-            ws.onmessage = function (event) {
-                var obj = eval("(" + event.data + ")");
-                console.log(obj);
-                table = buildHtmlTable(obj);
-                document.body.appendChild(table);
-            };
+        ws.onmessage = function (event) {
+            var obj = eval("(" + event.data + ")");
+            console.log(obj);
+            table = buildHtmlTable(obj);
+            document.body.appendChild(table);
+        };
 
-            function other() {
-                var messages = document.getElementsByTagName('ul')[0],
-                    message = document.createElement('li'),
-                    content = document.createTextNode(event.data);
+        function other() {
+            var messages = document.getElementsByTagName('ul')[0],
+                message = document.createElement('li'),
+                content = document.createTextNode(event.data);
 
 
-                var obj = JSON.parse(JSON.stringify(eval("(" + event.data + ")")));
-                console.log(obj);
-                var globalCounter = 0;
+            var obj = JSON.parse(JSON.stringify(eval("(" + event.data + ")")));
+            console.log(obj);
+            var globalCounter = 0;
 
-                var tbody = document.getElementById('tbody');
-                for (var i = 0; i < obj.length; i++) {
-                    var tr = "<tr>";
-                    var line = obj[i];
-                    console.log(line);
-                    console.log(line.length);
-                    for (var j = 0; j < line.length; j++) {
-                        console.log(line[j]);
-                    }
-                    tr += "<td>" + obj[i].key + "</td>" + "<td>" + obj[i].value.toString() + "</td></tr>";
-                    tbody.innerHTML += tr;
+            var tbody = document.getElementById('tbody');
+            for (var i = 0; i < obj.length; i++) {
+                var tr = "<tr>";
+                var line = obj[i];
+                console.log(line);
+                console.log(line.length);
+                for (var j = 0; j < line.length; j++) {
+                    console.log(line[j]);
                 }
+                tr += "<td>" + obj[i].key + "</td>" + "<td>" + obj[i].value.toString() + "</td></tr>";
+                tbody.innerHTML += tr;
             }
+        }
+    </script>
 
+    <div class="row">
+        <table class="table table-stripped" id="excelDataTable"></table>
+    </div>
 
-        </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="bootstrap/assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--<script src="bootstrap/assets/js/docs.min.js"></script>-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<script src="bootstrap/assets/js/ie10-viewport-bug-workaround.js"></script>-->
 
-    <table  id="excelDataTable" border="1"></table>
     </body>
 </html>
